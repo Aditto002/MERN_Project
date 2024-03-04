@@ -16,7 +16,9 @@ export const signup = async (req, res, next) => {
         if (existUser) {
             return res.status(200).json({
                 status: "success",
-                message: "user already exists"
+                message: "user already exists",
+                success: "false"
+                
             })
         }
         const newUser = await User.create({

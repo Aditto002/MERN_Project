@@ -1,21 +1,22 @@
 import { useState, useRef } from 'react';
 import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
-import Username from './Username';
+import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const SignIn = () => {
 
 
-  const naigate =useNavigate()
+  const naigate =useNavigate();
+  const dispatch = useDispatch();
   const formRef = useRef(null);
-const [loading,setLoading] = useState(false);
-const[error,setError] = useState(false);
+const {loading,error} = useSelector((state)=>state.user)
 let {emailRef,passwordRef}=useRef();
 const handleSubmit =async(e)=>{
   e.preventDefault()
 
   try{
-    setLoading(true);
+    dispatch(signInStart());
     let email = emailRef.value;
     let password = passwordRef.value;
     let formData ={
@@ -23,19 +24,22 @@ const handleSubmit =async(e)=>{
       password: password
     }
     const res = await axios.post('http://localhost:5000/api/auth/signin',formData);
-    setLoading(false);
+    console.log(res);
+    // setLoading(false);
+    dispatch(signInSuccess(res.data));
     if(res.data.success === 'false'){
-      setError(true);
+      // setError(true);
+      dispatch(signInFailure());
       return;
     }
-    setError(false);
+    
     formRef.current.reset();
     naigate('/')
   }
   catch(error){
-    setLoading(false);
-    setError(true);
-    console.error('Error:', error);
+    // setLoading(false);
+    // setError(true);
+    dispatch(signInFailure(error));
   }
 }
 

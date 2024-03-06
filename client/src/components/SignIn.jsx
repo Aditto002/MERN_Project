@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
 import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import Oauth from './Oauth';
 
 const SignIn = () => {
 
@@ -58,7 +59,7 @@ const handleSubmit =async(e)=>{
             <input id='email' ref={(input)=>emailRef = input}  className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="email" placeholder='email' />
             <input id='password' ref={(input)=>passwordRef = input} className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="password" placeholder='password' />
             <button type='submit'onClick={handleSubmit} className='bg-teal-500 rounded-xl text-lg text-gray-300 shadow-md w-3/4 h-10 hover:bg-teal-600' disabled={loading} >{loading? 'loading...': 'Sign In'}</button>
-            <button type='button' className='bg-yellow-500 rounded-xl text-lg text-gray-300 shadow-md w-3/4 h-10 hover:bg-yellow-600'>continue with google</button>
+           <Oauth></Oauth>
           </div>
           <div className='flex justify-center my-3'>
             <p className='text-red-500' >{error && "Somthing is wrong!"}</p>

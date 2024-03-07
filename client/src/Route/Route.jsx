@@ -6,6 +6,7 @@ import Profile from "../components/Profile.jsx"
 import SignIn from "../components/SignIn.jsx"
 import About from "../components/About.jsx"
 import Home from "../components/Home.jsx"
+import PrivateRoute from '../components/PrivateRoute.jsx'
 
 
 

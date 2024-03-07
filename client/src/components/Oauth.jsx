@@ -4,24 +4,27 @@ import {GoogleAuthProvider, getAuth, signInWithPopup} from 'firebase/auth'
 import { app } from '../firebase'
 import {  useDispatch } from 'react-redux'
 import { signInSuccess } from '../redux/user/userSlice'
+import { useNavigate } from 'react-router-dom';
 
 const Oauth = () => {
     const dispatch = useDispatch();
+    const naigate =useNavigate();
     const handlGoogle = async()=>{
         try{
          const provider = new GoogleAuthProvider()
          const auth = getAuth(app);
          const result = await signInWithPopup(auth,provider)
-         console.log(result)
-         const res = await axios.post('http://localhost:5000/api/auth/google',{
+         let formData ={
           name:result.user.displayName,
           email:result.user.email,
           photo: result.user.photoURL
-         });
-         console.log(result)
-         console.log(result.user.email)
-         console.log(result.user.photoURL)
-         dispatch(signInSuccess(res))
+         }
+        //  console.log(result)
+         const res = await axios.post('http://localhost:5000/api/auth/google',formData);
+        //  const data = await res.json();
+         console.log(res)
+         dispatch(signInSuccess(res.data))
+         naigate('/')
         }
         catch(e){
          console.log("could not login with google", e)

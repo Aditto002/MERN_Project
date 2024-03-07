@@ -55,11 +55,13 @@ export const signin =async(req, res,next)=>{
       }
 }
 
+
+
 export const google = async(req, res, next)=>{
     try{
         const user = await User.findOne({email: req.body.email})
         if(user){
-            const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
+            const token = Jwt.sign({id: user._id}, process.env.JWT_SECRET);
             const {password: hashpassword, ...rest} = user._doc;
             const expiryDate = new Date(Date.now() + 3600000);
             res.cookie('access_token',token,{httpOnly:true,expires:expiryDate}).status(200).json(rest);
@@ -74,7 +76,7 @@ export const google = async(req, res, next)=>{
                 password: hashpassword,
                 profilePicture: req.body.photo
             })
-            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET);
+            const token = Jwt.sign({id: newUser._id}, process.env.JWT_SECRET);
             const {password: hashpassword2, ...rest} = newUser._doc;
             const expiryDate = new Date(Date.now() + 3600000);
             res.cookie('access_token',token,{httpOnly:true,expires:expiryDate}).status(200).json(rest);

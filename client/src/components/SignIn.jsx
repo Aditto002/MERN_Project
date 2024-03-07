@@ -25,21 +25,18 @@ const handleSubmit =async(e)=>{
       password: password
     }
     const res = await axios.post('http://localhost:5000/api/auth/signin',formData);
-    console.log(res);
-    // setLoading(false);
-    dispatch(signInSuccess(res.data));
+    
+    const data = await res.json();
     if(res.data.success === 'false'){
-      // setError(true);
       dispatch(signInFailure());
       return;
     }
+    dispatch(signInSuccess(data));
     
-    formRef.current.reset();
     naigate('/')
+    formRef.current.reset();
   }
   catch(error){
-    // setLoading(false);
-    // setError(true);
     dispatch(signInFailure(error));
   }
 }

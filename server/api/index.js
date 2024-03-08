@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Userrouter from './routes/user.route.js';
 import Authrouter from './routes/auth.route.js';
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO).then(()=>{
@@ -16,6 +17,7 @@ mongoose.connect(process.env.MONGO).then(()=>{
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
  
 
 app.listen(5000,()=>{

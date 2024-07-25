@@ -2,6 +2,7 @@ import User from "../models/usermodel.js"
 import bcryptjs from 'bcryptjs';
 import { errorHandler } from "../utils/error.js";
 import  Jwt from "jsonwebtoken";
+import { json } from "express";
 
 
 
@@ -19,7 +20,6 @@ export const signup = async (req, res, next) => {
                 status: "success",
                 message: "user already exists",
                 success: "false"
-                
             })
         }
         const newUser = await User.create({
@@ -36,6 +36,11 @@ export const signup = async (req, res, next) => {
     }
 };
 
+
+
+/// Sign in 
+
+
 export const signin =async(req, res,next)=>{
       const {email, password} = req.body;
       try{
@@ -45,9 +50,17 @@ export const signin =async(req, res,next)=>{
         if(!vaildpassword)return next(errorHandler(401,'Password not match'))
          
         const token = Jwt.sign({id:vaildUser._id},process.env.JWT_SECRET);
-        const {password: hashpassword, ...rest} = vaildUser._doc;
+        // const {password: hashpassword, ...rest} = vaildUser._doc;
+        // console.log(vaildUser)
         const expiryDate = new Date(Date.now()+3600000)
-        res.cookie('access_token',token,{httpOnly:true, expires:expiryDate}).status(200).json(rest)
+        // res.cookie('access_token',token,{httpOnly:true, expires:expiryDate}).status(200).json(rest)
+        return res.status(200).json({
+            status: "success",
+            data:{
+                token: token,
+                user: vaildUser
+            }
+        })
 
       }
       catch(err){
@@ -86,4 +99,8 @@ export const google = async(req, res, next)=>{
     catch(error){
         next(error)
     }
+}
+
+export const signout = (req,res) =>{
+    res.clearCookie('access_token').status(200).json("SignOut successfully")
 }

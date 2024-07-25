@@ -15,9 +15,9 @@ mongoose.connect(process.env.MONGO).then(()=>{
 })
 
 const app = express();
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
  
 
 app.listen(5000,()=>{

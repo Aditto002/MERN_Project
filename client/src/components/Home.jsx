@@ -1,11 +1,19 @@
-import React from 'react'
+
+import React, { useState } from 'react';
+import { Carousel } from "@material-tailwind/react";
+import ReactSlider from './ReactSlider';
+
 
 const Home = () => {
-  return (
-    <div>
-      <h1>heoafhjfho</h1>
-    </div>
-  )
-}
+ 
 
-export default Home
+  return (
+  
+  <div>
+    <ReactSlider></ReactSlider>
+  </div>
+   
+  );
+};
+
+export default Home;

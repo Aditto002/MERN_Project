@@ -6,6 +6,7 @@ import Profile from "../components/Profile.jsx"
 import SignIn from "../components/SignIn.jsx"
 import About from "../components/About.jsx"
 import Home from "../components/Home.jsx"
+import Gallery from "../components/Gallery.jsx"
 import PrivateRoute from '../components/PrivateRoute.jsx'
 
 
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path:'/profile',
         element:<Profile></Profile>
+      },
+      {
+        path:'/gallery',
+        element:<Gallery></Gallery>
       },
       {
         path:'/signIn',

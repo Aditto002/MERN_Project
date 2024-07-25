@@ -11,15 +11,57 @@ const Register = () => {
   let usernameRef, passwordRef, emailRef = useRef();
 
   const handleSubmit = async (e) => {
-    
-  
+    e.preventDefault()
     try {
-      e.preventDefault()
-      setLoading(true);
-      setError(false);
     let username = usernameRef.value;
     let password = passwordRef.value;
     let email = emailRef.value;
+    var namepattern= /[a-zA-Z.]/;
+    var emailpattern= /^([\w]*[\w\.]*(?!\.)@gmail.com)/;
+    var passpattern= /((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*><?()*&+_])).{8,20}/;
+
+    if(username.length<2 || username.length>20){
+      
+      document.getElementById("efname").innerHTML="length must be 2-20";
+      return false;
+  }
+  else if(!username.match(namepattern)){
+      
+      document.getElementById("efname").innerHTML="invalid input";
+      return false;
+  }
+  else{
+      document.getElementById("efname").innerHTML="";
+      
+  }
+
+if(!email.match(emailpattern)){
+  document.getElementById("eemail").innerHTML="invalid input";
+  return false;
+}
+else{
+ 
+  document.getElementById("eemail").innerHTML="";
+  
+}
+
+if(!password){
+  document.getElementById("epass").innerHTML="Password is required";
+  return false;
+}
+else if(!password.match(passpattern)){
+
+  document.getElementById("epass").innerHTML="invalid input";
+  return false;
+}
+else{
+  document.getElementById("epass").innerHTML="";
+  
+}
+
+setLoading(true);
+setError(false);
+
     let formData = {
       username: username,
       password: password,
@@ -53,8 +95,11 @@ const Register = () => {
           <form className='py-1'ref={formRef}>
             <div className='textbox flex flex-col items-center gap-4'>
               <input id='username' ref={(input)=> usernameRef = input} className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="text" placeholder='Username' />
+              <span id='efname'></span>
               <input id='email' ref={(input)=> emailRef = input} className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="email" placeholder='email' />
+              <span id='eemail'></span>
               <input id='password'ref={(input)=> passwordRef = input} className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="password" placeholder='password' />
+              <span id='epass'></span>
               <button type='submit' onClick={handleSubmit} className='bg-teal-500 rounded-xl text-lg text-gray-300 shadow-md w-3/4 h-10 hover:bg-teal-600' disabled={loading}>{loading?"LOADING...": "Sign Up"}</button>
                <Oauth></Oauth>
             </div>

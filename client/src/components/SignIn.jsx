@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Oauth from './Oauth';
 
 const SignIn = () => {
-
-
   const naigate =useNavigate();
   const dispatch = useDispatch();
   const formRef = useRef(null);
@@ -25,13 +23,15 @@ const handleSubmit =async(e)=>{
       password: password
     }
     const res = await axios.post('http://localhost:5000/api/auth/signin',formData);
+    console.log(res.data.data.token)
+    localStorage.setItem("token",res?.data?.data?.token)
     
     // const data = await res.json();
     if(res.data.success === 'false'){
       dispatch(signInFailure());
       return;
     }
-    dispatch(signInSuccess(res.data));
+    dispatch(signInSuccess(res.data.data.user));
     
     naigate('/')
     formRef.current.reset();
@@ -44,17 +44,22 @@ const handleSubmit =async(e)=>{
 
   return (
    
-    <div className='container mx-auto mt-5'>
+    <div className='container mx-auto mt-5 '>
     <div className='flex items-center justify-center'>
       <div className='bg-slate-200 rounded-lg shadow-lg w-full md:w-[60%] lg:w-[40%] xl:w-[30%]'>
         <div className='flex flex-col items-center'>
-          <h3 className='text-3xl md:text-5xl font-bold mt-10'>Sign In</h3>
-          <span className='py-4 text-lg md:text-xl w-2/3 text-center text-gray-400'>Welcome Back...</span>
+          <h3 className='animate-bounce text-3xl md:text-5xl font-bold mt-10'>Sign In</h3>
+          <span className= ' py-4 text-lg md:text-xl w-2/3 text-center text-gray-400'>Welcome Back...</span>
         </div>
         <form className='py-1'ref={formRef}>
           <div className='textbox flex flex-col items-center gap-4'>
             <input id='email' ref={(input)=>emailRef = input}  className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="email" placeholder='email' />
             <input id='password' ref={(input)=>passwordRef = input} className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="password" placeholder='password' />
+            {/* <button type='submit'onClick={handleSubmit} className='mb-5 button w-3/4 h-10 bg-teal-500 rounded-lg cursor-pointer select-none
+    active:translate-y-2  active:[box-shadow:0_0px_0_0_#059c8d,0_0px_0_0_#059688]
+    active:border-b-[0px]
+    transition-all duration-150 [box-shadow:0_10px_0_0_#059c8d,0_15px_0_0_#059688]
+    border-b-[1px] bg-teal-500' disabled={loading} >{loading? 'loading...': 'Sign In'}</button> */}
             <button type='submit'onClick={handleSubmit} className='bg-teal-500 rounded-xl text-lg text-gray-300 shadow-md w-3/4 h-10 hover:bg-teal-600' disabled={loading} >{loading? 'loading...': 'Sign In'}</button>
            <Oauth></Oauth>
           </div>

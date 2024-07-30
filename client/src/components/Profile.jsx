@@ -111,11 +111,15 @@ const Profile = () => {
         dispatch(updateUserFailur(err))
       }
     }
+
+
+
     const hendleSignout = async() =>{
       try {
         naigate('/register');
-        await fetch('/api/user/signout')
-        // dispatch(signOut());
+        // await fetch('/api/user/signout')
+       localStorage.removeItem("token");
+      dispatch(signOut());
     } catch (e) {
         console.log(e);
     }

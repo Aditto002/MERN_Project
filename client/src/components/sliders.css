@@ -21,7 +21,7 @@
     top: 20%;
     width: 1140px;
     max-width: 80%;
-    left: 50%;
+    left: 45%;
     transform: translateX(-50%);
     padding-right: 30%;
     box-sizing: border-box;
@@ -94,6 +94,7 @@
   }
   .thumbnail .item .content .description{
     font-weight: 300;
+    /* margin-left: 50px; */
   }
   /* arrows */
   .arrows{

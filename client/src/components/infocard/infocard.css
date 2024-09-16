@@ -40,7 +40,7 @@ main {
   gap: 15px;
 }
 
-.card {
+.cards {
   width: 20%;
   border-radius: 15px;
   cursor: pointer;
@@ -48,21 +48,21 @@ main {
   position: relative;
 }
 
-.card:hover {
+.cards:hover {
   width: 80%;
 }
 
-.card .image {
+.cards .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.card:hover .image {
+.cards:hover .image {
   transform: scale(1.2);
 }
 
-.card .background {
+.cards .backgrounds {
   position: absolute;
   left: 0;
   top: 0;
@@ -75,11 +75,11 @@ main {
   opacity: 0;
 }
 
-.card:hover .background {
+.cards:hover .backgrounds {
   opacity: 1;
 }
 
-.card .layer {
+.cards .layer {
   width: 100%;
   height: 50%;
   margin-top: -250px;
@@ -87,7 +87,7 @@ main {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
 }
 
-.card .layer .info {
+.cards .layer .info {
   width: 260px;
   position: absolute;
   bottom: 10px;
@@ -95,11 +95,12 @@ main {
   opacity: 0;
 }
 
-.card:hover .layer .info {
+.cards:hover .layer .info {
   opacity: 1;
 }
-.card:hover .layer .info h1{
-    font-size: large;
+.cards:hover .layer .info h1{
+    font-size: 22px;
+    font-weight: 600;
     color: azure;
 }
 

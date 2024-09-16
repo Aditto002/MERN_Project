@@ -5,6 +5,7 @@ import {app} from '../firebase'
 import axios from 'axios';
 import { updateUserStart,updateUserSuccess,updateUserFailur,deleteUserStart,deleteUserSuccess,deleteUserFailur,signOut } from '../redux/user/userSlice';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 
 const Profile = () => {
@@ -69,50 +70,166 @@ const Profile = () => {
       naigate('/register')
   } catch (e) {
       dispatch(deleteUserFailur(e));
-  }
-
-  }
+  }}
   
 
-    const handleSubmit = async(e)=>{
-      e.preventDefault();
-      try{
-        dispatch(updateUserStart())
-        let username = usernameRef.value;
-        let email = emailRef.value;
-    let password = passwordRef.value;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      username: username,
-      email: email,
-      password: password
-    }));
-    const accessToken = localStorage.getItem("token")
-    // console.log(accessToken)
-    // console.log(formData)
-        const res = await axios.post(`http://localhost:5000/api/user/update/${currentUser._id}`,formData,{
+  //   const handleSubmit = async(e)=>{
+  //     e.preventDefault();
+  //     try{
+  //       dispatch(updateUserStart())
+  //       let username = usernameRef.value;
+  //       let email = emailRef.value;
+  //   let password = passwordRef.value;
+  //   setFormData(prevFormData => ({
+  //     ...prevFormData,
+  //     username: username,
+  //     email: email,
+  //     password: password
+  //   }));
+  //   const accessToken = localStorage.getItem("token")
+  //  console.log(accessToken)
+  //  console.log(formData)
+  //       const res = await axios.post(`http://localhost:5000/api/user/update/${currentUser._id}`,formData,{
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Authorization': 'Bearer ' + accessToken 
+  //         }
+  //       }
+  // ).then((res)=>{
+  //   console.log("res data",res)
+  //   dispatch(updateUserSuccess(res.data.data));
+  //   if(res.status ===200){
+  //     const Toast = Swal.mixin({
+  //       toast: true,
+  //       position: "top-end",
+  //       showConfirmButton: false,
+  //       timer: 3000,
+  //       timerProgressBar: true,
+  //       didOpen: (toast) => {
+  //         toast.onmouseenter = Swal.stopTimer;
+  //         toast.onmouseleave = Swal.resumeTimer;
+  //       }
+  //     });
+  //     Toast.fire({
+  //       icon: "success",
+  //       title: "Signed in successfully"
+  //     });
+  //   }
+  //   else{
+
+  //     const Toast = Swal.mixin({
+  //       toast: true,
+  //       position: "top-end",
+  //       showConfirmButton: false,
+  //       timer: 3000,
+  //       timerProgressBar: true,
+  //       didOpen: (toast) => {
+  //         toast.onmouseenter = Swal.stopTimer;
+  //         toast.onmouseleave = Swal.resumeTimer;
+  //       }
+  //     });
+  //     Toast.fire({
+  //       icon: "error",
+  //       title: "Somthing is wrong!"
+  //     });
+      
+  //   }
+  // })
+  //       // if(res.data.success === 'false'){
+  //       //   dispatch(updateUserFailur(res.data));
+  //       //   return;
+  //       // }
+  //       // console.log("res data",res.data)
+  //       // dispatch(updateUserSuccess(res.data))
+  //     }
+  //     catch(err){
+  //       dispatch(updateUserFailur(err))
+  //     }
+  //   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      dispatch(updateUserStart());
+  
+      let username = usernameRef.value;
+      let email = emailRef.value;
+      let password = passwordRef.value;
+  
+     
+      let updatedData = {
+        username: username,
+        email: email
+      };
+  
+     
+      if (password) {
+        updatedData.password = password;
+      }
+  
+    
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        ...updatedData
+      }));
+  
+      const accessToken = localStorage.getItem("token");
+      console.log(accessToken);
+      console.log(formData);
+  
+      const res = await axios.post(
+        `http://localhost:5000/api/user/update/${currentUser._id}`,
+        { ...formData, ...updatedData }, 
+        {
           headers: {
-            'Content-Type': 'application/json', // example header
-            'Authorization': 'Bearer ' + accessToken // example header
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken 
           }
         }
-  ).then((res)=>{
-    console.log("res data",res.data.data)
-    dispatch(updateUserSuccess(res.data.data))
-  })
-        // if(res.data.success === 'false'){
-        //   dispatch(updateUserFailur(res.data));
-        //   return;
-        // }
-        // console.log("res data",res.data)
-        // dispatch(updateUserSuccess(res.data))
-      }
-      catch(err){
-        dispatch(updateUserFailur(err))
-      }
+      ).then((res) => {
+        console.log("res data", res);
+        dispatch(updateUserSuccess(res.data.data));
+  
+        if (res.status === 200) {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Profile updated successfully"
+          });
+        } else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "error",
+            title: "Something went wrong!"
+          });
+        }
+      });
+  
+    } catch (err) {
+      dispatch(updateUserFailur(err));
     }
-
-
+  };
 
     const hendleSignout = async() =>{
       try {

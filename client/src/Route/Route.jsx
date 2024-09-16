@@ -7,9 +7,11 @@ import SignIn from "../components/SignIn.jsx"
 import About from "../components/About.jsx"
 import Home from "../components/Home.jsx"
 import Gallery from "../components/Gallery.jsx"
+import Contact from '../components/Contact.jsx'
 import PrivateRoute from '../components/PrivateRoute.jsx'
 
-
+import EmailVerify from '../components/EmailVerify/EmailVerify.jsx'
+import OTPVerification from '../components/OtpVerification/OtpVerification.jsx'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,18 @@ const router = createBrowserRouter([
       {
         path:'/about',
         element:<About></About>
+      },
+      {
+        path:'/contact',
+        element:<Contact></Contact>
+      },
+      {
+        path:'/emailverify',
+        element:<EmailVerify></EmailVerify>
+      },
+      {
+        path:'/otpVerification',
+        element:<OTPVerification></OTPVerification>
       },
       
 

@@ -16,6 +16,7 @@ const NavBar = () => {
                 <Link to='/'><li >Home</li></Link>
                 <Link to="/gallery"><li >Gallery</li></Link>
                 <Link to="/about"><li >About</li></Link>
+                <Link to="/contact"><li >Contact</li></Link>
                 <Link to="/profile">
                   {currentUser ? (
                     <Link to="/profile">  <img src={currentUser.profilePicture} alt="Profile" className='h-8 w-8 rounded-full object-cover'/></Link>

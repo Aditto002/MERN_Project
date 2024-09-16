@@ -1,83 +1,198 @@
 import { useState, useRef } from 'react';
 import axios from 'axios';
-import { Link,useNavigate } from 'react-router-dom';
-import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import Lottie from 'lottie-react';
+import loginAvatarAnimation from '.././assets/ani.json';
+import { signInSuccess, signInFailure } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Oauth from './Oauth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 const SignIn = () => {
-  const naigate =useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const formRef = useRef(null);
-const {loading,error} = useSelector((state)=>state.user)
-let {emailRef,passwordRef}=useRef();
-const handleSubmit =async(e)=>{
-  e.preventDefault()
+  let emailRef = useRef();
+  let passwordRef = useRef();
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  try{
-    dispatch(signInStart());
-    let email = emailRef.value;
-    let password = passwordRef.value;
-    let formData ={
-      email: email,
-      password: password
-    }
-    const res = await axios.post('http://localhost:5000/api/auth/signin',formData);
-    console.log(res.data.data.token)
-    localStorage.setItem("token",res?.data?.data?.token)
-    
-    // const data = await res.json();
-    if(res.data.success === 'false'){
-      dispatch(signInFailure());
-      return;
-    }
-    dispatch(signInSuccess(res.data.data.user));
-    
-    naigate('/')
-    formRef.current.reset();
-  }
-  catch(error){
-    dispatch(signInFailure(error));
-  }
-}
+  // State to manage password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      let email = emailRef.current.value;
+      let password = passwordRef.current.value;
+      let formData = {
+        email: email,
+        password: password,
+      };
+      console.log(formData);
+      const res = await axios.post('http://localhost:5000/api/auth/signin', formData);
+      localStorage.setItem("token", res?.data?.data?.token);
+      console.log(res);
+      ////////////////////////////////////////////////////////
+      if(res.data.data.user.isVerified === true){
+        dispatch(signInSuccess(res.data.data.user));
+        if(res.data.status == 'success'){
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Sing in successfully"
+          });
+        } else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "error",
+            title: "Something went wrong!"
+          });
+        }
+        
+  
+        navigate('/');
+        formRef.current.reset();
+
+      }
+      else{
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "error",
+          title: "Email Not Verified, Verify Email first"
+        });
+        navigate('/otpVerification', { state: { email } });
+      }
+      
+    } catch (error) {
+      dispatch(signInFailure(error));
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "Something went wrong!"
+      });
+      console.error("Sign-in error: ", error);
+    }
+  };
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
 
   return (
-   
-    <div className='container mx-auto mt-5 '>
-    <div className='flex items-center justify-center'>
-      <div className='bg-slate-200 rounded-lg shadow-lg w-full md:w-[60%] lg:w-[40%] xl:w-[30%]'>
-        <div className='flex flex-col items-center'>
-          <h3 className='animate-bounce text-3xl md:text-5xl font-bold mt-10'>Sign In</h3>
-          <span className= ' py-4 text-lg md:text-xl w-2/3 text-center text-gray-400'>Welcome Back...</span>
+    <div className='font-[sans-serif] bg-white flex items-center justify-center md:h-screen p-4'>
+      <div className='shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)] max-w-6xl max-md:max-w-lg rounded-md p-6'>
+        <a href='javascript:void(0)'>
+          <img src='https://readymadeui.com/readymadeui.svg' alt='logo' className='w-40 md:mb-4 mb-12' />
+        </a>
+
+        <div className='grid md:grid-cols-2 items-center gap-8'>
+          <div className='max-md:order-1 lg:min-w-[450px]'>
+            <Lottie animationData={loginAvatarAnimation} loop={true} />
+          </div>
+
+          <form className='md:max-w-md w-full mx-auto' ref={formRef} onSubmit={handleSubmit}>
+            <div className='mb-12'>
+              <h3 className='text-4xl font-extrabold text-blue-600'>Sign in</h3>
+            </div>
+
+            <div>
+              <div className='relative flex items-center'>
+                <input
+                  id='email'
+                  ref={emailRef}
+                  name='email'
+                  type='email'
+                  required
+                  className='w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none'
+                  placeholder='Enter email'
+                />
+              </div>
+            </div>
+
+            <div className='mt-8'>
+              <div className='relative flex items-center'>
+                <input
+                  id='password'
+                  ref={passwordRef}
+                  name='password'
+                  type={showPassword ? 'text' : 'password'} // Toggle between 'text' and 'password'
+                  required
+                  className='w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none'
+                  placeholder='Enter password'
+                />
+                <FontAwesomeIcon
+                  icon={showPassword ? faEye : faEyeSlash} // Use FontAwesomeIcon for eye/eye-slash
+                  className='absolute right-2 cursor-pointer'
+                  onClick={togglePasswordVisibility} // Toggle password visibility on click
+                />
+              </div>
+            </div>
+
+            <div className='mt-12'>
+              <button
+                type='submit'
+                className='w-full shadow-xl py-2.5 px-5 text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none mb-5'
+                disabled={loading}
+              >
+                {loading ? 'loading...' : 'Sign In'}
+              </button>
+              <Oauth></Oauth>
+              <p className='text-gray-800 text-sm text-center mt-6'>
+                Don't have an account?{' '}
+                <Link to='/register' className='text-blue-600 font-semibold hover:underline ml-1'>
+                  Register here
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
-        <form className='py-1'ref={formRef}>
-          <div className='textbox flex flex-col items-center gap-4'>
-            <input id='email' ref={(input)=>emailRef = input}  className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="email" placeholder='email' />
-            <input id='password' ref={(input)=>passwordRef = input} className='bg-slate-100 border-0 px-3 py-2 rounded-xl w-3/4 md:w-3/4 shadow-sm text-lg focus:outline-none' type="password" placeholder='password' />
-            {/* <button type='submit'onClick={handleSubmit} className='mb-5 button w-3/4 h-10 bg-teal-500 rounded-lg cursor-pointer select-none
-    active:translate-y-2  active:[box-shadow:0_0px_0_0_#059c8d,0_0px_0_0_#059688]
-    active:border-b-[0px]
-    transition-all duration-150 [box-shadow:0_10px_0_0_#059c8d,0_15px_0_0_#059688]
-    border-b-[1px] bg-teal-500' disabled={loading} >{loading? 'loading...': 'Sign In'}</button> */}
-            <button type='submit'onClick={handleSubmit} className='bg-teal-500 rounded-xl text-lg text-gray-300 shadow-md w-3/4 h-10 hover:bg-teal-600' disabled={loading} >{loading? 'loading...': 'Sign In'}</button>
-           <Oauth></Oauth>
-          </div>
-          <div className='flex justify-center my-3'>
-            <p className='text-red-500' >{error && "Somthing is wrong!"}</p>
-          </div>
-          <div className='flex justify-center my-3'>
-      
-            <p>
-             Don't Have an account ? <span className='text-red-500'><Link to='/register'>sign Up</Link></span>
-            </p>
-          </div>
-        </form>
       </div>
     </div>
-  </div>
-  
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;

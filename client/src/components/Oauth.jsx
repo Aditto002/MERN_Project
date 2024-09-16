@@ -23,7 +23,8 @@ const Oauth = () => {
          const res = await axios.post('http://localhost:5000/api/auth/google',formData);
         //  const data = await res.json();
          console.log(res)
-         dispatch(signInSuccess(res.data))
+         localStorage.setItem("token",res?.data?.token)
+         dispatch(signInSuccess(res.data.data))
          naigate('/')
         }
         catch(e){
@@ -31,7 +32,7 @@ const Oauth = () => {
         }
     }
   return (
-    <button type='button' onClick={handlGoogle} className=' bg-yellow-500 rounded-xl text-lg text-gray-300 shadow-md w-3/4 h-10 hover:bg-yellow-600'>continue with google</button>
+    <button type='button' onClick={handlGoogle} className=' bg-yellow-500 rounded-xl text-lg text-gray-200 shadow-md w-full h-10 hover:bg-yellow-600'>continue with google</button>
 
   )
 }

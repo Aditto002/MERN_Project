@@ -2,11 +2,12 @@ import React, { Component, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 import { Carousel } from 'react-responsive-carousel';
-import img1 from "../assets/slide1.jpg"
-import img2 from "../assets/slide2.jpg"
-import img3 from "../assets/slider3.jpg"
-import img4 from "../assets/img4.jpg"
+import img1 from "../assets/n1.jpg"
+import img2 from "../assets/n2.jpg"
+import img3 from "../assets/n5.jpg"
+import img4 from "../assets/n4.jpg"
 import './sliders.css'
+import { Link } from 'react-router-dom';
 // import { GoChevronLeft } from "react-icons/go";
 
 const ReactSlider = () => {
@@ -120,10 +121,14 @@ const ReactSlider = () => {
                 <div className="title">{item.title}</div>
                 <div className="topic">{item.topic}</div>
                 <div className="des">{item.description}</div>
+                  {/* <button>{item.button1}</button> */}
+                  <Link to="/signIn">
                 <div className="buttons">
-                  <button>{item.button1}</button>
+
                   <button>{item.button2}</button>
+                  
                 </div>
+                  </Link>
               </div>
             </div>
           ))}
@@ -142,8 +147,8 @@ const ReactSlider = () => {
         </div>
 
         <div className="arrows">
-          <button id="prev" ref={prevRef}>1</button>
-          <button id="next" ref={nextRef}>1</button>
+          <button id="prev" ref={prevRef}>&lt;</button>
+          <button id="next" ref={nextRef}>&gt;</button>
         </div>
 
         <div className="time" ref={timeRef}></div>

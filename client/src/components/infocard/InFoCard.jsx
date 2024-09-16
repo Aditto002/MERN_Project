@@ -43,9 +43,9 @@ const InFoCard = () => {
     <div className="body">
       <main>
         {cards.map((card, index) => (
-          <div className="card" key={index}>
+          <div className="cards" key={index}>
             <img src={card.image} alt={card.title} className="image" />
-            <img src={card.image} alt={card.title} className="background" />
+            <img src={card.image} alt={card.title} className="backgrounds" />
             <div className="layer">
               <div className="info">
                 <h1>{card.title}</h1>

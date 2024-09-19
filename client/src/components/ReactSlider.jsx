@@ -2,12 +2,11 @@ import React, { Component, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 import { Carousel } from 'react-responsive-carousel';
-import img1 from "../assets/n1.jpg"
-import img2 from "../assets/n2.jpg"
-import img3 from "../assets/n5.jpg"
-import img4 from "../assets/n4.jpg"
+import img1 from "../assets/slide1.jpg"
+import img2 from "../assets/slide2.jpg"
+import img3 from "../assets/slider3.jpg"
+import img4 from "../assets/img4.jpg"
 import './sliders.css'
-import { Link } from 'react-router-dom';
 // import { GoChevronLeft } from "react-icons/go";
 
 const ReactSlider = () => {
@@ -20,7 +19,7 @@ const ReactSlider = () => {
 
   const items = [
     {
-      img: img1,
+      img:"https://wander-lush.org/wp-content/uploads/2022/03/Most-eautiful-places-in-Bangladesh-WMC-Sylhet.jpg",
       author: 'REACT',
       title: 'DESIGN SLIDER',
       topic: 'NATURAL',
@@ -29,7 +28,7 @@ const ReactSlider = () => {
       button2: 'LOGIN'
     },
     {
-      img: img2,
+      img:"https://wander-lush.org/wp-content/uploads/2022/03/Most-eautiful-places-in-Bangladesh-CP-Sundarbans-NP.jpg",
       author: 'REACT',
       title: 'DESIGN SLIDER',
       topic: 'NATURAL',
@@ -38,7 +37,7 @@ const ReactSlider = () => {
       button2: 'LOGIN'
     },
     {
-      img: img3,
+      img:"https://wander-lush.org/wp-content/uploads/2022/03/Most-eautiful-places-in-Bangladesh-CP-Sreemangal.jpg",
       author: 'REACT',
       title: 'DESIGN SLIDER',
       topic: 'NATURAL',
@@ -47,7 +46,25 @@ const ReactSlider = () => {
       button2: 'LOGIN'
     },
     {
-      img: img4,
+      img:"https://wander-lush.org/wp-content/uploads/2022/03/Most-eautiful-places-in-Bangladesh-CP-Keokradong.jpg",
+      author: 'REACT',
+      title: 'DESIGN SLIDER',
+      topic: 'NATURAL',
+      description: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut sequi, rem magnam nesciunt minima placeat, itaque eum neque officiis unde, eaque optio ratione aliquid assumenda facere ab et quasi ducimus aut doloribus non numquam. Explicabo, laboriosam nisi reprehenderit tempora at laborum natus unde. Ut, exercitationem eum aperiam illo illum laudantium?',
+      button1: 'SEE MORE',
+      button2: 'LOGIN'
+    } ,
+    {
+      img:"https://wander-lush.org/wp-content/uploads/2022/03/Most-eautiful-places-in-Bangladesh-US-Coxs-Bazar.jpg",
+      author: 'REACT',
+      title: 'DESIGN SLIDER',
+      topic: 'NATURAL',
+      description: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut sequi, rem magnam nesciunt minima placeat, itaque eum neque officiis unde, eaque optio ratione aliquid assumenda facere ab et quasi ducimus aut doloribus non numquam. Explicabo, laboriosam nisi reprehenderit tempora at laborum natus unde. Ut, exercitationem eum aperiam illo illum laudantium?',
+      button1: 'SEE MORE',
+      button2: 'LOGIN'
+    },
+    {
+      img:"https://wander-lush.org/wp-content/uploads/2022/03/Most-eautiful-places-in-Bangladesh-CP-St-Martins-Island.jpg",
       author: 'REACT',
       title: 'DESIGN SLIDER',
       topic: 'NATURAL',
@@ -55,6 +72,7 @@ const ReactSlider = () => {
       button1: 'SEE MORE',
       button2: 'LOGIN'
     }
+
   ];
 
   useEffect(() => {
@@ -121,14 +139,10 @@ const ReactSlider = () => {
                 <div className="title">{item.title}</div>
                 <div className="topic">{item.topic}</div>
                 <div className="des">{item.description}</div>
-                  {/* <button>{item.button1}</button> */}
-                  <Link to="/signIn">
                 <div className="buttons">
-
+                  <button>{item.button1}</button>
                   <button>{item.button2}</button>
-                  
                 </div>
-                  </Link>
               </div>
             </div>
           ))}
@@ -147,8 +161,8 @@ const ReactSlider = () => {
         </div>
 
         <div className="arrows">
-          <button id="prev" ref={prevRef}>&lt;</button>
-          <button id="next" ref={nextRef}>&gt;</button>
+          <button id="prev" ref={prevRef}>1</button>
+          <button id="next" ref={nextRef}>1</button>
         </div>
 
         <div className="time" ref={timeRef}></div>
@@ -157,4 +171,4 @@ const ReactSlider = () => {
   );
 }
 
-export default ReactSlider
+export default ReactSlider

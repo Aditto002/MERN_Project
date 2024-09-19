@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInFailure, signInSuccess } from '../../redux/user/userSlice';
 
 const OTPVerification = () => {
   const [otp, setOtp] = useState('');
@@ -13,6 +15,8 @@ const OTPVerification = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
+  
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("object", email)
@@ -37,8 +41,12 @@ const handleVerifyOtp = async (e) => {
         email,
         otp,
       });
+      localStorage.setItem("token", res?.data?.data?.token)
       console.log(" hello ",res)
+      if(res.data.data.user.isVerified === true){
 
+        dispatch(signInSuccess(res.data.data.user));
+      }
       if (res.status === 200) {
         Swal.fire({
           icon: 'success',
@@ -47,13 +55,14 @@ const handleVerifyOtp = async (e) => {
           timer: 2000,
           showConfirmButton: false,
         });
-        navigate('/signin');
+        navigate('/');
       } else {
         setError('Invalid OTP or verification failed.');
       }
       setLoading(false);
     } 
     catch (error) {
+      dispatch(signInFailure(error));
       setLoading(false);
       setError('An error occurred while verifying the OTP.');
     }

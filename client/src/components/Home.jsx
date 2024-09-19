@@ -12,7 +12,7 @@ const Home = () => {
   
   <div>
     <ReactSlider></ReactSlider>
-    <InFoCard></InFoCard>
+    {/* <InFoCard></InFoCard> */}
   </div>
    
   );

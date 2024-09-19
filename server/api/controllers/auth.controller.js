@@ -121,8 +121,14 @@ export const verifyEmail = async (req, res, next) => {
     
       user.isVerified = true;
       user.save();
+      /////////////////////////////////////////////////////
+      const token = Jwt.sign({id:user._id},process.env.JWT_SECRET);
+        const expiryDate = new Date(Date.now()+3600000)
 
-      res.status(200).json({ message: "Email verified successfully!" });
+      res.status(200).json({ message: "Email verified successfully!", data:{
+        token: token,
+        user: user
+    } });
   } catch (err) {
       res.status(400).json({ message: "Invalid or expired token" });
       console.log(err.message);

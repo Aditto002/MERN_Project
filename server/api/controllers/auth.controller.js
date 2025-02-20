@@ -39,15 +39,7 @@ export const signup = async (req, res, next) => {
        const verificationUrl = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
 
        
-      //  const emailSubject = 'Verify your email';
-      //  const emailText = `Hello ${username}, please verify your email by clicking the link below: ${verificationUrl}`;
-      // //  const emailHTML = `
-      //    <p>Hello ${username},</p>
-      //    <p>Please verify your email by clicking the link below:</p>
-      //    <a href="${verificationUrl}">Verify Email</a>
-      //  `;
-       
-      //  await SendEmailUtils(email, emailText, emailSubject);
+
       const OTPCode = otpGenerator.generate(4, {
         digits: true,
         alphabets: false,
@@ -94,7 +86,7 @@ export const verifyEmail = async (req, res, next) => {
   const { email,otp } = req.body;
 
   try {
-      // Find the user by ID
+      // Find the user by email
       const user = await User.findOne({email});
 
       if (!user) {
@@ -105,7 +97,7 @@ export const verifyEmail = async (req, res, next) => {
           return res.status(400).json({ message: "User already verified" });
       }
 
-      const OTPStatus = 0; // Status 0 indicates the OTP is not yet verified
+      const OTPStatus = 0; 
       const OTPCount = await OTPModel.countDocuments({
         email,
         otp,
@@ -116,7 +108,7 @@ export const verifyEmail = async (req, res, next) => {
         return res.status(400).json({ message: "invalid OTP" });
       }
     
-      // Update OTP status to indicate verification
+      
       await OTPModel.updateOne({ email, otp, status: OTPStatus }, { status: 1 });
     
       user.isVerified = true;

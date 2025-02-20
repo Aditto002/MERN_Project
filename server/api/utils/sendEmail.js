@@ -16,7 +16,7 @@ export const SendEmailUtils = async (EmailTo, EmailText, EmailSubject)=>{
             //user: process.env.EMAIL, //my email address
             user: "cse_2112020025@lus.ac.bd",
             //pass: process.env.EMAIL_PASSWORD //my email address password
-            pass: "Helloaditto25",
+            pass: "Helloaditto2025",
         },
         tls: {
             rejectUnauthorized: true
@@ -27,7 +27,7 @@ export const SendEmailUtils = async (EmailTo, EmailText, EmailSubject)=>{
     // send mail with defined transport object
     let mailOptions = {
 
-        from: '"OTP" <cse_2112020025@lus.ac.bd>',//first part is the email headline and in <> we use our email address
+        from: '"ExploreConnect" <cse_2112020025@lus.ac.bd>',//first part is the email headline and in <> we use our email address
         to: EmailTo, // list of receivers
         subject: EmailSubject, // Subject line
         text: EmailText, // plain text body

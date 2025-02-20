@@ -15,6 +15,9 @@ const OTPVerification = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
+
+
+  
   
   const dispatch = useDispatch();
 

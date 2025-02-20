@@ -15,120 +15,93 @@ const SignIn = () => {
   const formRef = useRef(null);
   let emailRef = useRef();
   let passwordRef = useRef();
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
-  // State to manage password visibility
   const [showPassword, setShowPassword] = useState(false);
+
+  // Regex Patterns
+  const emailPattern = /^([a-z\d\._]{2,})@gmail\.com$/;
+  const passPattern = /((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*><?()*&+_])).{8,20}/;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    let email = emailRef.current.value;
+    let password = passwordRef.current.value;
+
+    // Email validation
+    if (!emailPattern.test(email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Email Format!',
+        text: 'Only Gmail accounts are allowed. Example: yourname@gmail.com',
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      return;
+    }
+
+    // Password validation
+    if (!passPattern.test(password)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Wrong Password!',
+        text: 'Enter correct password.',
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      return;
+    }
 
     try {
-      let email = emailRef.current.value;
-      let password = passwordRef.current.value;
-      let formData = {
-        email: email,
-        password: password,
-      };
-      console.log(formData);
+      let formData = { email, password };
       const res = await axios.post('http://localhost:5000/api/auth/signin', formData);
       localStorage.setItem("token", res?.data?.data?.token);
-      console.log(res);
-      ////////////////////////////////////////////////////////
-      if(res.data.data.user.isVerified === true){
-        dispatch(signInSuccess(res.data.data.user));
-        if(res.data.status == 'success'){
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            }
-          });
-          Toast.fire({
-            icon: "success",
-            title: "Sing in successfully"
-          });
-        } else {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            }
-          });
-          Toast.fire({
-            icon: "error",
-            title: "Something went wrong!"
-          });
-        }
-        
-  
-        navigate('/');
-        formRef.current.reset();
 
-      }
-      else{
-        const Toast = Swal.mixin({
+      if (res.data.data.user.isVerified) {
+        dispatch(signInSuccess(res.data.data.user));
+        Swal.fire({
+          icon: "success",
+          title: "Signed in successfully!",
           toast: true,
-          position: "top-end",
+          position: "top-right",
           showConfirmButton: false,
           timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
         });
-        Toast.fire({
+        navigate('/');
+        formRef.current.reset();
+      } else {
+        Swal.fire({
           icon: "error",
-          title: "Email Not Verified, Verify Email first"
+          title: "Email Not Verified!",
+          text: "Verify your email first.",
+          toast: true,
+          position: "top-right",
+          showConfirmButton: false,
+          timer: 3000,
         });
         navigate('/otpVerification', { state: { email } });
       }
-      
     } catch (error) {
       dispatch(signInFailure(error));
-      const Toast = Swal.mixin({
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong!",
         toast: true,
-        position: "top-end",
+        position: "top-right",
         showConfirmButton: false,
         timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        }
       });
-      Toast.fire({
-        icon: "error",
-        title: "Something went wrong!"
-      });
-      console.error("Sign-in error: ", error);
     }
-  };
-
-  // Toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevState) => !prevState);
   };
 
   return (
     <div className='font-[sans-serif] bg-white flex items-center justify-center md:h-screen p-4'>
-      <div className='shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)] max-w-6xl max-md:max-w-lg rounded-md p-6'>
-        <a href='javascript:void(0)'>
-          <img src='https://readymadeui.com/readymadeui.svg' alt='logo' className='w-40 md:mb-4 mb-12' />
-        </a>
-
+      <div className='shadow-lg max-w-6xl max-md:max-w-lg rounded-md p-6'>
         <div className='grid md:grid-cols-2 items-center gap-8'>
           <div className='max-md:order-1 lg:min-w-[450px]'>
             <Lottie animationData={loginAvatarAnimation} loop={true} />
@@ -139,37 +112,33 @@ const SignIn = () => {
               <h3 className='text-4xl font-extrabold text-blue-600'>Sign in</h3>
             </div>
 
-            <div>
-              <div className='relative flex items-center'>
-                <input
-                  id='email'
-                  ref={emailRef}
-                  name='email'
-                  type='email'
-                  required
-                  className='w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none'
-                  placeholder='Enter email'
-                />
-              </div>
+            <div className='relative flex items-center'>
+              <input
+                id='email'
+                ref={emailRef}
+                name='email'
+                type='email'
+                required
+                className='w-full text-md border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none'
+                placeholder='Enter email'
+              />
             </div>
 
-            <div className='mt-8'>
-              <div className='relative flex items-center'>
-                <input
-                  id='password'
-                  ref={passwordRef}
-                  name='password'
-                  type={showPassword ? 'text' : 'password'} // Toggle between 'text' and 'password'
-                  required
-                  className='w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none'
-                  placeholder='Enter password'
-                />
-                <FontAwesomeIcon
-                  icon={showPassword ? faEye : faEyeSlash} // Use FontAwesomeIcon for eye/eye-slash
-                  className='absolute right-2 cursor-pointer'
-                  onClick={togglePasswordVisibility} // Toggle password visibility on click
-                />
-              </div>
+            <div className='mt-8 relative flex items-center'>
+              <input
+                id='password'
+                ref={passwordRef}
+                name='password'
+                type={showPassword ? 'text' : 'password'}
+                required
+                className='w-full text-md border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none'
+                placeholder='Enter password'
+              />
+              <FontAwesomeIcon
+                icon={showPassword ? faEye : faEyeSlash}
+                className='absolute right-2 cursor-pointer'
+                onClick={() => setShowPassword(!showPassword)}
+              />
             </div>
 
             <div className='mt-12'>
@@ -178,9 +147,9 @@ const SignIn = () => {
                 className='w-full shadow-xl py-2.5 px-5 text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none mb-5'
                 disabled={loading}
               >
-                {loading ? 'loading...' : 'Sign In'}
+                {loading ? 'Loading...' : 'Sign In'}
               </button>
-              <Oauth></Oauth>
+              <Oauth />
               <p className='text-gray-800 text-sm text-center mt-6'>
                 Don't have an account?{' '}
                 <Link to='/register' className='text-blue-600 font-semibold hover:underline ml-1'>

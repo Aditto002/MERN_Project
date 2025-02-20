@@ -6,7 +6,8 @@ const NavBar = () => {
   const { currentUser } = useSelector(state => state.user)
 
   return (
-    <div className='bg-slate-200 shadow-md'>
+    <div className='bg-slate-200 shadow-md '>
+      {/* fixed top-0 left-0 w-full z-50 */}
       <div className='flex justify-between items-center max-w-6xl mx-auto p-4'>
         <Link to="/">
           <h1 className='font-bold text-4xl text-indigo-600 hover:text-indigo-800 transition duration-300'>
@@ -19,8 +20,15 @@ const NavBar = () => {
             <Link to='/'>Home</Link>
           </li>
           <li className='hover:text-indigo-600 transition duration-200'>
-            <Link to="/gallery">Gallery</Link>
+            <Link to="/gallery">Trip</Link>
           </li>
+          {
+            currentUser ? (<li className='hover:text-indigo-600 transition duration-200'>
+              <Link to="/reminderpage">Reminder</Link>
+            </li>):(<></>)
+          }
+          
+
           <li className='hover:text-indigo-600 transition duration-200'>
             <Link to="/about">About</Link>
           </li>

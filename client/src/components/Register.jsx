@@ -16,6 +16,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   let usernameRef, passwordRef, emailRef = useRef();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +25,8 @@ const Register = () => {
       let password = passwordRef.value;
       let email = emailRef.value;
       var namepattern = /[a-zA-Z.]/;
-      var emailpattern = /^([\w]*[\w\.]*(?!\.)@gmail.com)/;
+      // var emailpattern = /^([\w]*[\w\.]*(?!\.)@gmail.com)/;
+      var emailpattern = /^([a-z\d\._]{2,})@gmail\.com$/;
       var passpattern = /((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*><?()*&+_])).{8,20}/;
 
       if (username.length < 2 || username.length > 20) {
@@ -38,7 +40,7 @@ const Register = () => {
       }
 
       if (!email.match(emailpattern)) {
-        document.getElementById("eemail").innerHTML = "invalid input";
+        document.getElementById("eemail").innerHTML = "Enter a Valied Email";
         return false;
       } else {
         document.getElementById("eemail").innerHTML = "";
@@ -48,7 +50,7 @@ const Register = () => {
         document.getElementById("epass").innerHTML = "Password is required";
         return false;
       } else if (!password.match(passpattern)) {
-        document.getElementById("epass").innerHTML = "invalid input";
+        document.getElementById("epass").innerHTML = "Password must be 8 character and atlest one uppercase, lowercase, digit and special character ";
         return false;
       } else {
         document.getElementById("epass").innerHTML = "";
@@ -64,18 +66,9 @@ const Register = () => {
       };
       const res = await axios.post("http://localhost:5000/api/auth/signup", formData);
       console.log(res);
-      console.log("  hello", res.status)
-      setLoading(false);
-      if(res.status === 201){
-        navigate('/otpVerification', { state: { email: email } });
-
-      }
-      if (res.data.success === 'false') {
-        setError(true);
-        return;
-      }
-      setError(false);
-      if(res.data.status == 'success'){
+      console.log("  hello")
+      
+      if(res.data.success === 'false'){
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -88,12 +81,44 @@ const Register = () => {
           }
         });
         Toast.fire({
-          icon: "success",
-          title: "Register successfully, Now Sign Up "
+          icon: "error",
+          title: "User Already Exist"
         });
+
+        setLoading(false);
+      }else{
+        setLoading(false);
+
+        if(res.status === 201){
+          navigate('/otpVerification', { state: { email: email } });
+  
+        }
+        if (res.data.success === 'false') {
+          setError(true);
+          return;
+        }
+        setError(false);
+        if(res.data.status == 'success'){
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Register successfully, Now Sign Up "
+          });
+        }
+        formRef.current.reset();
+      } 
       }
-      formRef.current.reset();
-    } catch (error) {
+    catch (error) {
       setLoading(false);
       setError(true);
       console.error('Error:', error);

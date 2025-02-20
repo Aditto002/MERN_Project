@@ -134,7 +134,7 @@ const ReactSlider = () => {
           {items.map((item, index) => (
             <div className="item" key={index}>
               <img src={item.img} alt={`img${index + 1}`} />
-              <div className="content">
+              {/* <div className="content">
                 <div className="author">{item.author}</div>
                 <div className="title">{item.title}</div>
                 <div className="topic">{item.topic}</div>
@@ -143,7 +143,7 @@ const ReactSlider = () => {
                   <button>{item.button1}</button>
                   <button>{item.button2}</button>
                 </div>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
@@ -153,16 +153,15 @@ const ReactSlider = () => {
             <div className="item" key={index}>
               <img src={item.img} alt={`thumbnail${index + 1}`} />
               <div className="content">
-                <div className="title">Name Slider</div>
-                <div className="description">Description</div>
+               
               </div>
             </div>
           ))}
         </div>
 
         <div className="arrows">
-          <button id="prev" ref={prevRef}>1</button>
-          <button id="next" ref={nextRef}>1</button>
+          <button id="prev" ref={prevRef}>&lt;</button>
+          <button id="next" ref={nextRef}>&gt;</button>
         </div>
 
         <div className="time" ref={timeRef}></div>
